@@ -6,6 +6,7 @@ from dynamixel_workbench_msgs.srv import DynamixelCommand
 from jointSrv import jointCommand
 import termios, sys, os
 TERMIOS = termios
+import numpy as np
 
 
 LIM_MIN = 0 #Mínimo valor para la posición de la articulación
@@ -29,41 +30,49 @@ def getKey():
         termios.tcsetattr(fd, TERMIOS.TCSAFLUSH, old)
     return c
 
-def select_joint(tecla,joint):
+def actions(tecla,joint):
     if tecla == b'w':
         if joint >= 5:
             joint = 1
         else:
-            joint+= 1 
+            joint+= 1
+        print("Junta", joint, "seleccionada.", "Oprima A para llevar la junta a home o D para llevarla a un valor específico") 
     elif tecla == b's': 
         if joint <= 1:
             joint = 5
         else:
             joint-= 1
 
-    return joint
+        print("Junta", joint, "seleccionada","Oprima A para llevar la junta a home o D para llevarla a un valor específico") 
 
-def change_jposition(tecla,joint):
-    if tecla == b'a':
-        if position <= (LIM_MAX-DELTA_POS):
-            position+= DELTA_POS
-            jointCommand('', joint, 'Goal_Position', position, 0.5)
-        elif position > (LIM_MAX- DELTA_POS):
-            position = LIM_MAX
-            jointCommand('', joint, 'Goal_Position', position, 0.5)
-        else:
-            pass # Qué hacer cuando esta fuera de rango (MIN_LIM, MAX_LIM) NO debería pasar nunca, sirve para evitar bugs, creería yo
-        
+    elif tecla == b'a':
+        jointCommand('', joint, 'Goal_Position', 512, 0.5)
+
     elif tecla == b'd':
-            if position <= (LIM_MIN + DELTA_POS):
-                position = LIM_MIN
-                jointCommand('', joint, 'Goal_Position', position, 0.5)
-            elif position <= LIM_MAX:
-                position -=DELTA_POS
-                jointCommand('', joint, 'Goal_Position', position, 0.5)
-            else:
-                pass # Qué hacer cuando este fuera de rango (MIN_LIM, MAX_LIM) NO debería pasar nunca, sirve para evitar bufs, creería yo
+        new_position = int(input("Ingrese la posición deseada de la junta en bits: min 0, max 1023 :"))
+        jointCommand('', joint, 'Goal_Position', new_position,0.5)
+    else:
+        print("Error, oprima W/S para cambiar la junta, A para llevar la junta seleccionada a home y D para llevarla a una posición expecífica")
+    
+    return joint
+if __name__ == '__main__':
+    try:
+        print("Presione Q para salir")
+        print("Presione W/S para cambiar la junta, A para llevar la junta seleccionada a home y D para llevarla a una posición expecífica")
+        jointCommand('', 1, 'Torque_Limit', 600, 0)
+        jointCommand('', 2, 'Torque_Limit', 500, 0)
+        jointCommand('', 3, 'Torque_Limit', 400, 0)
+        jointCommand('', 4, 'Torque_Limit', 400, 0)
 
+        current_joint = 1
+        while(1):
+            tecla = getKey()
+            current_joint = actions(tecla,current_joint)
+            if tecla == b'q':
+                break
+        
+    except rospy.ROSInterruptException:
+        pass
 
 
 

@@ -42,7 +42,7 @@ if __name__ == '__main__':
         jointCommand('', 2, 'Goal_Position', 512, 1)
         time.sleep(0.5)
         jointCommand('', 3, 'Goal_Position', 240, 0.5)
-        jointCommand('', 1, 'Goal_Position', 512, 0.5)
+        print(jointCommand('', 1, 'Present_Position', 512, 0.5))
         
     except rospy.ROSInterruptException:
         pass
