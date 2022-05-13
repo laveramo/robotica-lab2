@@ -64,33 +64,50 @@ Luego usamos el metodo .tool para cambiar la orientación del phantom, ya que la
  
  Ahora para la conexión con ROS se usaron las siguientes funciones:
  
- `rosinit;` Conexion con nodo maestro
+ `rosinit;` Conexion con nodo maestro  
  
- Para realizar la subscripción a los estados de las articulación se creó un archivo de matlab llamado `dyna-sub.m` que contiene:
  
-`jstatesSub = rossubscriber('/dynamixel_workbench/join_states');` El cual crea el subscriptor
+ Para realizar la subscripción a los estados de las articulación se creó un archivo de matlab llamado `dyna-sub.m` que contiene:  
+ 
+ 
+`jstatesSub = rossubscriber('/dynamixel_workbench/join_states');` El cual crea el subscriptor  
 
-`jstatesMsg = jstatesSub.LatestMessage;` %Recibe el último mensaje
-`jstatesMsg.Position`
+
+`jstatesMsg = jstatesSub.LatestMessage;` %Recibe el último mensaje  
+
+`jstatesMsg.Position`  
+
 
 Para publicar, se creó el archivo de matlab `dyna-pub.m` que contiene:
 
-`jstatesPub = rospublisher('/dynamixel_workbench/joint_states','sensor_msgs/JointState');` Creación publicador
-`jstatesMsg = rosmessage(jstatesPub);` Creación de mensaje
+`jstatesPub = rospublisher('/dynamixel_workbench/joint_states','sensor_msgs/JointState');` Creación publicador  
 
-`jstatesMsg.Name = "waist";` Valor del mensaje
-`send(jstatesPub,jstatesMsg);` Envio
-`pause(1)`
+`jstatesMsg = rosmessage(jstatesPub);` Creación de mensaje  
 
-Para crear el cliente de pose y posición se creó un archivo en matlab llamado `dyna_server.m` el cual contiene:
 
-`motorSvcClient = rossvcclient('/dynamixel_workbench/dynamixel_command');` Creación de cliente de pose y posición
-`motorCommandMsg = rosmessage(motorSvcClient);` Creación de mensaje
+`jstatesMsg.Name = "waist";` Valor del mensaje  
 
-`motorCommandMsg.AddrName = "Goal_Position";`
-`motorCommandMsg.Id = 1;`
-`motorCommandMsg.Value = 0;`
-`call(motorSvcClient,motorCommandMsg);`
+`send(jstatesPub,jstatesMsg);` Envio  
+
+`pause(1)`  
+
+
+Para crear el cliente de pose y posición se creó un archivo en matlab llamado `dyna_server.m` el cual contiene:  
+
+
+`motorSvcClient = rossvcclient('/dynamixel_workbench/dynamixel_command');` Creación de cliente de pose y posición  
+
+`motorCommandMsg = rosmessage(motorSvcClient);` Creación de mensaje  
+
+
+`motorCommandMsg.AddrName = "Goal_Position";`  
+
+`motorCommandMsg.Id = 1;`  
+
+`motorCommandMsg.Value = 0;`  
+
+`call(motorSvcClient,motorCommandMsg);`  
+
 
 Video demostrativo: https://youtu.be/5YeRemsvWN0
 ### Análisis
