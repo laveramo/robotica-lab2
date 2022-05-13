@@ -31,6 +31,8 @@ Para simular el robot Phantom X por medio del toolbox de peter corke se utilizar
 
 Link: La cual crea un objeto de tipo Link que guarda toda la información relacionada a la articulación de un robot: así que se crearon los 4 eslabones insertando los parametros de Denavit-Hartenber de la siguiente manera:
 
+ ```matlab
+ 
 `L1 = 45 ;L2 = 106.6; L3 = L2; L4 = 80;` 
 
 `L(1) = Link('revolute', 'd', L1, 'a', 0, 'alpha', pi/2, 'offset', 0);`  
@@ -40,6 +42,9 @@ Link: La cual crea un objeto de tipo Link que guarda toda la información relaci
 `L(3) = Link('revolute', 'd', 0, 'a', L3, 'alpha', 0, 'offset', 0);`  
 
 `L(4) = Link('revolute', 'd', 0, 'a', L4, 'alpha', 0, 'offset', 0);`  
+
+```
+
 
 Luego se procede a unir los links por medio de la funcion "SerialLink", de la siguiente manera:
 
@@ -70,36 +75,38 @@ Luego usamos el metodo .tool para cambiar la orientación del phantom, ya que la
  
  Para realizar la subscripción a los estados de las articulación se creó un archivo de matlab llamado `dyna-sub.m` que contiene:  
  
+ ```matlab
  
 `jstatesSub = rossubscriber('/dynamixel_workbench/join_states');` El cual crea el subscriptor  
 
-
 `jstatesMsg = jstatesSub.LatestMessage;` %Recibe el último mensaje  
 
-`jstatesMsg.Position`  
+`jstatesMsg.Position`
 
-
+```
+  
 Para publicar, se creó el archivo de matlab `dyna-pub.m` que contiene:
 
-`jstatesPub = rospublisher('/dynamixel_workbench/joint_states','sensor_msgs/JointState');` Creación publicador  
+```matlab
+jstatesPub = rospublisher('/dynamixel_workbench/joint_states','sensor_msgs/JointState'); Creación publicador  
 
-`jstatesMsg = rosmessage(jstatesPub);` Creación de mensaje  
+jstatesMsg = rosmessage(jstatesPub); %Creación de mensaje  
 
+jstatesMsg.Name = "waist"; Valor del mensaje  
 
-`jstatesMsg.Name = "waist";` Valor del mensaje  
+send(jstatesPub,jstatesMsg); Envio  
 
-`send(jstatesPub,jstatesMsg);` Envio  
+pause(1)
 
-`pause(1)`  
+```
 
 
 Para crear el cliente de pose y posición se creó un archivo en matlab llamado `dyna_server.m` el cual contiene:  
 
+```matlab
+`motorSvcClient = rossvcclient('/dynamixel_workbench/dynamixel_command');` %Creación de cliente de pose y posición  
 
-`motorSvcClient = rossvcclient('/dynamixel_workbench/dynamixel_command');` Creación de cliente de pose y posición  
-
-`motorCommandMsg = rosmessage(motorSvcClient);` Creación de mensaje  
-
+`motorCommandMsg = rosmessage(motorSvcClient);` %Creación de mensaje  
 
 `motorCommandMsg.AddrName = "Goal_Position";`  
 
@@ -108,6 +115,9 @@ Para crear el cliente de pose y posición se creó un archivo en matlab llamado 
 `motorCommandMsg.Value = 0;`  
 
 `call(motorSvcClient,motorCommandMsg);`  
+
+```
+
 
 
 Video demostrativo: https://youtu.be/5YeRemsvWN0
