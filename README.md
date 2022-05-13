@@ -1,5 +1,17 @@
 # robotica-lab2
 ## 1. Diagrama del robot Phantom X y sus parámetros DH
+A continuación podemos observar el diagrama del Phantom X donde podemos observar las medidas, se tuvo en cuenta además una distancia de 45mm entre la primera y segunda articulación (De abajo hacia arrabo)
+
+![Diagrama](diagrama-1.png "Diagrama")
+
+A continuación podemos observar los marcos coordenados para los parametros de Denavit-Hartenber.
+
+![Marcos](robor-dh.png "Marcos")
+
+Donde se obtienen la siguiente tabla con los parametros de Denavit-Hartenvber y su respectivo ploteo en Matlab
+
+![Tabla](tabla-dh.png "Tabla")
+
 ## 2. Conexión con ROS
 ### Procedimiento
 1. Se realizó el script *mov_px.py* ubicado en *px_robot/scripts/* permite mover las juntas del robot de la siguiente forma:
