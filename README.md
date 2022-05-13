@@ -30,6 +30,8 @@ Donde se obtienen la siguiente tabla con los parametros de Denavit-Hartenvber.
 
 ## 4. MATLAB + ROS + TCP
 
+### Procedimiento
+
 Para simular el robot Phantom X por medio del toolbox de peter corke se utilizaron las siguientes funciones:
 
 Link: La cual crea un objeto de tipo Link que guarda toda la información relacionada a la articulación de un robot: así que se crearon los 4 eslabones insertando los parametros de Denavit-Hartenber de la siguiente manera:
@@ -44,7 +46,6 @@ Link: La cual crea un objeto de tipo Link que guarda toda la información relaci
 
 `L(4) = Link('revolute', 'd', 0, 'a', L4, 'alpha', 0, 'offset', 0);`  
 
-
 Luego se procede a unir los links por medio de la funcion "SerialLink", de la siguiente manera:
 
 Phantom = SerialLink(L,'name', 'Phantom X')
@@ -53,13 +54,45 @@ El cual arrojo la siguiente tabla que muestra los parametros de Denavit-Hartenbe
 
 ![Tabla-mano](tabla-dh.png "Tabla-mano")
 
+Luego usamos el metodo .tool para cambiar la orientación del phantom, ya que la obtenida anteriormente no es la correcta, el siguiente codigo corrige esa orientación:
+
+`PhantomX.tool = [0 0 1 l(4); -1 0 0 0; 0 -1 0 0; 0 0 0 1];` 
+
  además se utilizó el metodo .plot(q) en el objeto SerialLink obtenido, la cual tiene como argumento el vector de los valores de q para cada articulación y tiene como salida el gráfico del robot con dichos valores de q, obteniendo entonces:
  
  ![plot](plot_q.png "Plot q")
  
+ Ahora para la conexión con ROS se usaron las siguientes funciones:
+ 
+ `rosinit;` Conexion con nodo maestro
+ 
+ Para realizar la subscripción a los estados de las articulación se creó un archivo de matlab llamado `dyna-sub.m` que contiene:
+ 
+`jstatesSub = rossubscriber('/dynamixel_workbench/join_states');` El cual crea el subscriptor
+
+`jstatesMsg = jstatesSub.LatestMessage;` %Recibe el último mensaje
+`jstatesMsg.Position`
+
+Para publicar, se creó el archivo de matlab `dyna-pub.m` que contiene:
+
+`jstatesPub = rospublisher('/dynamixel_workbench/joint_states','sensor_msgs/JointState');` Creación publicador
+`jstatesMsg = rosmessage(jstatesPub);` Creación de mensaje
+
+`jstatesMsg.Name = "waist";` Valor del mensaje
+`send(jstatesPub,jstatesMsg);` Envio
+`pause(1)`
+
+Para crear el cliente de pose y posición se creó un archivo en matlab llamado `dyna_server.m` el cual contiene:
+
+`motorSvcClient = rossvcclient('/dynamixel_workbench/dynamixel_command');` Creación de cliente de pose y posición
+`motorCommandMsg = rosmessage(motorSvcClient);` Creación de mensaje
+
+`motorCommandMsg.AddrName = "Goal_Position";`
+`motorCommandMsg.Id = 1;`
+`motorCommandMsg.Value = 0;`
+`call(motorSvcClient,motorCommandMsg);`
 
 Video demostrativo: https://youtu.be/5YeRemsvWN0
-### Procedimiento
 ### Análisis
 ## Conclusiones
 ## Referencias
