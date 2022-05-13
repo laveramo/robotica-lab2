@@ -26,11 +26,6 @@ Donde se obtienen la siguiente tabla con los parametros de Denavit-Hartenvber.
 ###Análisis
 ## 3. Uso del TCP
 ### Procedimiento
-### Análisis
-
-## 4. MATLAB + ROS + TCP
-
-### Procedimiento
 
 Para simular el robot Phantom X por medio del toolbox de peter corke se utilizaron las siguientes funciones:
 
@@ -61,6 +56,12 @@ Luego usamos el metodo .tool para cambiar la orientación del phantom, ya que la
  además se utilizó el metodo .plot(q) en el objeto SerialLink obtenido, la cual tiene como argumento el vector de los valores de q para cada articulación y tiene como salida el gráfico del robot con dichos valores de q, obteniendo entonces:
  
  ![plot](plot_q.png "Plot q")
+ 
+### Análisis
+
+## 4. MATLAB + ROS + TCP
+
+### Procedimiento
  
  Ahora para la conexión con ROS se usaron las siguientes funciones:
  
