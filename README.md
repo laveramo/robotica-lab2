@@ -22,8 +22,10 @@ Donde se obtienen la siguiente tabla con los parametros de Denavit-Hartenvber.
 
 2. Para lograr la lectura de las teclas se crea la función getKey() tomada de [5].
 3. Se creó la función `actions()` la cual decide la acción a realizar según la tecla oprimida.
-4. Para el movimiento de las juntas se importó la función `jointCommand()` del script *jointSrv.py* el cual permite llamar al servicio *dynamixel_command*. De esta forma se puede usar `jointCommand()` para
-###Análisis
+4. Para el movimiento de las juntas se importó la función `jointCommand()` del script *jointSrv.py* el cual permite llamar al servicio *dynamixel_command*. De esta forma se puede usar `jointCommand()` para mover las juntas a la posición deseada
+
+Video demostrativo Python + ROS: https://youtu.be/wrMVv-XPaBM
+
 ## 3. Uso del TCP
 ### Procedimiento
 
@@ -61,45 +63,15 @@ Luego usamos el metodo .tool para cambiar la orientación del phantom, ya que la
  además se utilizó el metodo .plot(q) en el objeto SerialLink obtenido, la cual tiene como argumento el vector de los valores de q para cada articulación y tiene como salida el gráfico del robot con dichos valores de q, obteniendo entonces:
  
  ![plot](plot_q.png "Plot q")
- 
-### Análisis
+
 
 ## 4. MATLAB + ROS + TCP
 
 ### Procedimiento
  
- Ahora para la conexión con ROS se usaron las siguientes funciones:
+ Ahora para la conexión con MATLAB se usaron las siguientes funciones:
  
  `rosinit;` Conexion con nodo maestro  
- 
- 
- Para realizar la subscripción a los estados de las articulación se creó un archivo de matlab llamado `dyna-sub.m` que contiene:  
- 
- ```matlab
- 
-`jstatesSub = rossubscriber('/dynamixel_workbench/join_states');` El cual crea el subscriptor  
-
-`jstatesMsg = jstatesSub.LatestMessage;` %Recibe el último mensaje  
-
-`jstatesMsg.Position`
-
-```
-  
-Para publicar, se creó el archivo de matlab `dyna-pub.m` que contiene:
-
-```matlab
-jstatesPub = rospublisher('/dynamixel_workbench/joint_states','sensor_msgs/JointState'); Creación publicador  
-
-jstatesMsg = rosmessage(jstatesPub); %Creación de mensaje  
-
-jstatesMsg.Name = "waist"; Valor del mensaje  
-
-send(jstatesPub,jstatesMsg); Envio  
-
-pause(1)
-
-```
-
 
 Para crear el cliente de pose y posición se creó un archivo en matlab llamado `dyna_server.m` el cual contiene:  
 
@@ -118,10 +90,14 @@ Para crear el cliente de pose y posición se creó un archivo en matlab llamado 
 
 ```
 
+Para resolver el ejercicio propuesto, se solicita al usuario dos entradas, el numero de la junta a mover y la posicion deseada en grados, luego se usa el servicio `joint command` para mover las juntas a la posicion deseada.
 
+Video demostrativo MATLAB + ROS + TCP: https://youtu.be/5YeRemsvWN0
 
-Video demostrativo: https://youtu.be/5YeRemsvWN0
-### Análisis
 ## Conclusiones
+
+Para el buen manejo de los robots, se debe investigar primero su espacio de configuración y su espacio de tarea, además de configurar un torque que no genere movimientos indeseados.  
+
+Para comprender la estructura de ros es util tener buen manejo de la terminal para poder observar los tópicos y servicios activos desde el paquete de Dynamixel
 ## Referencias
 [5] [Python for fun: Get Key Pressed in Python](http://python4fun.blogspot.com/2008/06/get-key-press-in-python.html)
