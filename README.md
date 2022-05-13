@@ -1,3 +1,3 @@
 # robotica-lab2
 
-![Diagrama](diagrama.png)
+![Diagrama](diagrama-1.png)
