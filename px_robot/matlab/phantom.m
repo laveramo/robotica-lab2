@@ -1,0 +1,47 @@
+l = [14.5, 10.7, 10.7, 9]; % Longitudes eslabones
+% Definicion del robot RTB
+L(1) = Link('revolute','alpha',pi/2,'a',0,   'd',l(1),'offset',0,   'qlim',[-3*pi/4 3*pi/4]);
+L(2) = Link('revolute','alpha',0,   'a',l(2),'d',0,   'offset',pi/2,'qlim',[-3*pi/4 3*pi/4]);
+L(3) = Link('revolute','alpha',0,   'a',l(3),'d',0,   'offset',0,   'qlim',[-3*pi/4 3*pi/4]);
+L(4) = Link('revolute','alpha',0,   'a',0,   'd',0,   'offset',0,   'qlim',[-3*pi/4 3*pi/4]);
+PhantomX = SerialLink(L,'name','Px');
+% roty(pi/2)*rotz(-pi/2)
+PhantomX.tool = [0 0 1 l(4); -1 0 0 0; 0 -1 0 0; 0 0 0 1];
+ws = [-50 50];
+% Graficar robot
+PhantomX.plot([0 0 0 0],'notiles','noname');
+hold on
+trplot(eye(4),'rgb','arrow','length',15,'frame','0')
+axis([repmat(ws,1,2) 0 60])
+%PhantomX.teach()
+%%
+q = zeros(1,4);
+M = eye(4);
+for i=1:PhantomX.n
+    M = M * L(i).A(q(i));
+    trplot(M,'rgb','arrow','frame',num2str(i),'length',15)
+end
+%%
+%%
+motorSvcClient = rossvcclient('/dynamixel_workbench/dynamixel_command'); %Creación de cliente de pose y posición
+motorCommandMsg = rosmessage(motorSvcClient); %Creación de mensaje
+%%
+control = true;
+disp("Press q for quit")
+while control
+    joint = input("Ingrese el número de junta a mover: ");
+    pos = input("Ingrese el valor de la posición en grados :  ");
+
+    motorCommandMsg.AddrName = "Goal_Position";
+    motorCommandMsg.Id = joint;
+    motorCommandMsg.Value = mapfun(pos,-135,135,0,1023);
+    call(motorSvcClient,motorCommandMsg);
+    q(joint) = pos;
+    PhantomX.plot((q*pi)/180,'notiles','noname');
+    hold on
+    trplot(eye(4),'rgb','arrow','length',15,'frame','0')
+    axis([repmat(ws,1,2) 0 60])
+
+end
+
+
