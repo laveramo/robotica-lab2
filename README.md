@@ -6,7 +6,7 @@ A continuación podemos observar el diagrama del Phantom X donde podemos observa
 
 A continuación podemos observar los marcos coordenados para los parametros de Denavit-Hartenber.
 
-![Marcos](robor-dh.png "Marcos")
+![Marcos](robot-dh.png "Marcos")
 
 Donde se obtienen la siguiente tabla con los parametros de Denavit-Hartenvber y su respectivo ploteo en Matlab
 
@@ -29,6 +29,9 @@ Donde se obtienen la siguiente tabla con los parametros de Denavit-Hartenvber y 
 ### Análisis
 
 ## 4. MATLAB + ROS + TCP
+
+
+Video demostrativo: https://youtu.be/5YeRemsvWN0
 ### Procedimiento
 ### Análisis
 ## Conclusiones
