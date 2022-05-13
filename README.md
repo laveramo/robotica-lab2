@@ -37,13 +37,13 @@ Link: La cual crea un objeto de tipo Link que guarda toda la información relaci
  
 `L1 = 45 ;L2 = 106.6; L3 = L2; L4 = 80;` 
 
-`L(1) = Link('revolute', 'd', L1, 'a', 0, 'alpha', pi/2, 'offset', 0);`  
+L(1) = Link('revolute', 'd', L1, 'a', 0, 'alpha', pi/2, 'offset', 0);
 
-`L(2) = Link('revolute', 'd', 0, 'a', L2, 'alpha', 0, 'offset', pi/2);`  
+L(2) = Link('revolute', 'd', 0, 'a', L2, 'alpha', 0, 'offset', pi/2);  
 
-`L(3) = Link('revolute', 'd', 0, 'a', L3, 'alpha', 0, 'offset', 0);`  
+L(3) = Link('revolute', 'd', 0, 'a', L3, 'alpha', 0, 'offset', 0);  
 
-`L(4) = Link('revolute', 'd', 0, 'a', L4, 'alpha', 0, 'offset', 0);`  
+L(4) = Link('revolute', 'd', 0, 'a', L4, 'alpha', 0, 'offset', 0);  
 
 ```
 
@@ -76,17 +76,17 @@ Luego usamos el metodo .tool para cambiar la orientación del phantom, ya que la
 Para crear el cliente de pose y posición se creó un archivo en matlab llamado `dyna_server.m` el cual contiene:  
 
 ```matlab
-`motorSvcClient = rossvcclient('/dynamixel_workbench/dynamixel_command');` %Creación de cliente de pose y posición  
+motorSvcClient = rossvcclient('/dynamixel_workbench/dynamixel_command'); %Creación de cliente de pose y posición  
 
-`motorCommandMsg = rosmessage(motorSvcClient);` %Creación de mensaje  
+motorCommandMsg = rosmessage(motorSvcClient); %Creación de mensaje  
 
-`motorCommandMsg.AddrName = "Goal_Position";`  
+motorCommandMsg.AddrName = "Goal_Position";  
 
-`motorCommandMsg.Id = 1;`  
+motorCommandMsg.Id = 1;  
 
-`motorCommandMsg.Value = 0;`  
+motorCommandMsg.Value = 0;  
 
-`call(motorSvcClient,motorCommandMsg);`  
+call(motorSvcClient,motorCommandMsg);  
 
 ```
 
